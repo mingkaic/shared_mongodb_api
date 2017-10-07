@@ -15,7 +15,7 @@ connection.once('connected', () => {
 });
 
 function waitForGfs(resolve) {
-    if (null === gfs) {
+    if (1 !== connection.readyState) {
         setTimeout(waitForGfs.bind(this, resolve), 30);
 	}
 	else {
