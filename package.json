@@ -1,0 +1,38 @@
+{
+  "name": "shared_mongodb_api",
+  "version": "1.0.0",
+  "description": "shared mongoose api for audio file persistence",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "gridfs-stream": "^1.1.1",
+    "mongoose": "^4.11.12",
+    "schema-object": "^4.0.11",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "fake-stream": "^0.1.1",
+    "mocha": "^3.5.3",
+    "mongo-clean": "^1.2.2"
+  },
+  "scripts": {
+    "test": "mocha testDb.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mingkaic/shared_mongodb_api.git"
+  },
+  "keywords": [
+    "mongoose",
+    "audio"
+  ],
+  "author": "Ming Kai Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mingkaic/shared_mongodb_api/issues"
+  },
+  "homepage": "https://github.com/mingkaic/shared_mongodb_api#readme"
+}
