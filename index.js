@@ -14,6 +14,15 @@ connection.once('connected', () => {
 	gfs = grid(connection.db, mongoose.mongo);
 });
 
+function waitForGfs(resolve) {
+    if (null === gfs) {
+        setTimeout(waitForGfs.bind(this, resolve), 30);
+	}
+	else {
+		resolve();
+	}
+}
+
 // >>>> AUDIO MODEL <<<<
 // ACCESSOR
 exports.audioQuery = (query, limit) => { // get metadata
@@ -49,13 +58,7 @@ exports.updateAudioTitle = (id, title) => { // set metadata
 };
 
 exports.audioSave = (audios) => { // set audio stream and metadata
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			if (null !== gfs) {
-				resolve();
-			}
-		}, 1000);
-	})
+	return new Promise(waitForGfs)
 	.then(() => {
 		return Promise.all(audios.map((aud) => {
 			if (null === aud || 
