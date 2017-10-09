@@ -27,7 +27,9 @@ function waitForGfs(resolve) {
 // ACCESSOR
 exports.audioQuery = (query, limit) => { // get metadata
 	var allQuery = AudioModel.find(query);
-	allQuery = allQuery.limit(limit);
+	if (limit) {
+		allQuery = allQuery.limit(limit);
+	}
 	return allQuery.exec();
 };
 
