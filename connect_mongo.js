@@ -6,9 +6,10 @@ if (process.env.NODE_ENV !== 'production') {
 	dbName += '_test';
 }
 const dbHost = process.env.DB_HOST || '127.0.0.1';
+const dbPort = process.env.DB_PORT || '27017';
 
 // setup grid and mongoose
-const mongoURL = process.env.MONGO_URL || 'mongodb://' + dbHost + ':27017/' + dbName;
+const mongoURL = 'mongodb://' + dbHost + ':' + dbPort + '/' + dbName;
 function connect() {
 	mongoose.connect(mongoURL, { useMongoClient: true });
 	grid.mongo = mongoose.mongo;
