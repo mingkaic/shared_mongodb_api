@@ -6,7 +6,6 @@ require('./connect_mongo');
 var AudioSchema = require('./_schemas/audio_schema');
 
 var AudioModel = require('./_models/audio_model');
-var PopularModel = require('./_models/popular_model');
 
 var gfs = null;
 var connection = mongoose.connection;
@@ -95,28 +94,4 @@ exports.audioSave = (audios) => { // set audio stream and metadata
 	.then(() => {
 		return audios.map((aud) => aud.id);
 	});
-};
-
-// >>>> POPULAR MODEL <<<<
-// ACCESSOR
-exports.popularQuery = () => {
-	var today = Math.floor(Date.now() / 1000);
-	return PopularModel.findOne({ "date": today }).exec()
-	.then((data) => {
-		var ids = []
-		if (data) {
-			ids = data.ids;
-		}
-		return ids;
-	});
-};
-
-// MUTATOR
-exports.popularSave = (ids) => {
-	console.log('saving to popular')
-    var today = Math.floor(Date.now() / 1000);
-    return new PopularModel({
-        'date': today,
-        'ids': ids
-    }).save();
 };

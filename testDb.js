@@ -73,32 +73,18 @@ describe('Audio Database (When Empty)', function() {
 		})
 		.catch(done);
 	});
-    
-    it('popularQuery should return empty ids',
-    function(done) {
-        db.popularQuery()
-        .then((ids) => {
-			expect(ids.length).to.equal(0);
-			
-			done();
-        })
-		.catch(done);
-    });
 });
 
 // behavior when database already has an entry
 describe('Audio Database (With An Entry)', function() {
-    var savedIds;
+	var savedIds;
 	before(function(done) {
 		this.timeout(10000);
 
 		var testAudios = sampleAudios();
 		db.audioSave(testAudios)
 		.then((ids) => {
-            savedIds = ids;
-            return db.popularSave(ids);
-        })
-        .then(() => {
+			savedIds = ids;
 			done();
 		})
 		.catch(done);
@@ -127,21 +113,6 @@ describe('Audio Database (With An Entry)', function() {
 		})
 		.catch(done);
 	});
-    
-    it('popularQuery should return saved ids',
-    function(done) {
-        db.popularQuery()
-        .then((ids) => {
-            let n = ids.length;
-            expect(n).to.equal(savedIds.length);
-            for (let i = 0; i < n; i++) {
-                expect(ids[i]).to.equal(savedIds[i]);
-			}
-			
-			done();
-        })
-		.catch(done);
-    });
 	
 	after(function(done) {
 		clean(mongoURL, function (err, db) {
