@@ -22,6 +22,8 @@ function waitForGfs(resolve) {
 	}
 }
 
+exports.AudioSchema = AudioSchema;
+
 // >>>> AUDIO MODEL <<<<
 // ACCESSOR
 exports.audioQuery = (query, limit) => { // get metadata
@@ -58,14 +60,14 @@ exports.updateAudioTitle = (id, title) => { // set metadata
 	});
 };
 
-exports.audioSave = (audios) => { // set audio stream and metadata
-	return new Promise(waitForGfs)
-	.then(() => {
-		return Promise.all(audios.map((aud) => {
+// cb handles each instance of audio datum
+exports.audioSave = (audios, cb, end) => { // set audio stream and metadata
+	waitForGfs(() => {
+		audios.forEach((aud) => {
 			if (null === aud || 
 				!(aud instanceof AudioSchema) ||
 				null == aud.audio) {
-				return null;
+				return;
 			}
 
 			// save to database
@@ -78,7 +80,7 @@ exports.audioSave = (audios) => { // set audio stream and metadata
 				'title': aud.title
 			});
 			
-			return new Promise((resolve, reject) => {
+			new Promise((resolve, reject) => {
 				writeStream
 				.on('close', resolve)
 				.on('error', reject);
@@ -88,10 +90,13 @@ exports.audioSave = (audios) => { // set audio stream and metadata
 			})
 			.then((data) => {
 				console.log(aud.id, " saved");
+				cb({
+					"id": aud.id,
+					"source": aud.source,
+					"title": aud.title,
+				});
 			});
-		}));
-	})
-	.then(() => {
-		return audios.map((aud) => aud.id);
+		});
+		end();
 	});
 };
