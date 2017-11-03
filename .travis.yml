@@ -1,0 +1,19 @@
+language: generic
+
+before_script:
+  - MONGOID=$(docker run -p 27017:27017 -d mongo:latest)
+
+script:
+  - npm test
+
+after_script:
+  - docker kill $MONGOID
+
+# safelist
+branches:
+  only:
+  - master
+
+# no need to pollute inboxes
+notifications:
+  email: false

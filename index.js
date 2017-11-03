@@ -3,9 +3,9 @@ const grid = require('gridfs-stream');
 
 require('./connect_mongo');
 
-var AudioSchema = require('./_schemas/audio_schema');
+var AudioSchema = require('./audio_schema');
 
-var AudioModel = require('./_models/audio_model');
+var AudioModel = require('./audio_model');
 
 var gfs = null;
 var connection = mongoose.connection;
@@ -63,11 +63,11 @@ exports.updateAudioTitle = (id, title) => { // set metadata
 // cb handles each instance of audio datum
 exports.audioSave = (audios, cb, end) => { // set audio stream and metadata
 	waitForGfs(() => {
-		audios.forEach((aud) => {
+		Promise.all(audios.map((aud) => {
 			if (null === aud || 
 				!(aud instanceof AudioSchema) ||
 				null == aud.audio) {
-				return;
+				return null;
 			}
 
 			// save to database
@@ -80,7 +80,7 @@ exports.audioSave = (audios, cb, end) => { // set audio stream and metadata
 				'title': aud.title
 			});
 			
-			new Promise((resolve, reject) => {
+			return new Promise((resolve, reject) => {
 				writeStream
 				.on('close', resolve)
 				.on('error', reject);
@@ -96,7 +96,9 @@ exports.audioSave = (audios, cb, end) => { // set audio stream and metadata
 					"title": aud.title,
 				});
 			});
+		})).then(end).catch((err) => {
+			console.log(err);
+			end();
 		});
-		end();
 	});
 };

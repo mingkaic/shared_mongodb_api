@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "shared mongoose api for audio file persistence",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
+  "directories": {},
   "dependencies": {
     "gridfs-stream": "^1.1.1",
     "mongoose": "^4.11.12",

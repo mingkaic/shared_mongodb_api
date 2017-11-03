@@ -6,7 +6,7 @@ const stream = require('fake-stream');
 
 // connect mongoose to mongo then get service
 const db = require('./index');
-const AudioSchema = require('./_schemas/audio_schema');
+const AudioSchema = require('./audio_schema');
 
 const expect = chai.expect; // we are using the "expect" style of Chai
 const mongoURL = require('./connect_mongo').url;
@@ -35,18 +35,22 @@ describe('Audio Database (When Empty)', function() {
 		var testAudios = sampleAudios();
 		var nulIdx = Math.floor(Math.random() * testAudios.length);
 		testAudios[nulIdx].audio = null;
-		db.audioSave(testAudios)
-		.then((ids) => {
-			expect(ids).to.be.instanceof(Array);
-			expect(ids.length).to.equal(testAudios.length);
-			let idSet = new Set(ids);
-			expect(testAudios.every((amodel) => idSet.has(amodel.id))).to.be.true;
+		var nulId = testAudios[nulIdx].id;
+		var testAudiosId = new Set(testAudios.map((testAud) => testAud.id));
+		var count = 0;
+		db.audioSave(testAudios, (audio) => {
+			count++;
+			expect(testAudiosId.has(audio.id)).to.be.true;
+			expect(audio.id).to.not.be.equal(nulId);
+		}, 
+		() => {
+			console.log(count);
+			expect(count).to.be.equal(testAudios.length - 1); // never count null audio
 			
 			clean(mongoURL, function (err, db) {
 				done();
 			});
-		})
-		.catch(done);
+		});
 	});
 
 	it('audioQuery on id should return null', 
@@ -77,17 +81,17 @@ describe('Audio Database (When Empty)', function() {
 
 // behavior when database already has an entry
 describe('Audio Database (With An Entry)', function() {
-	var savedIds;
+	var savedIds = [];
 	before(function(done) {
 		this.timeout(10000);
 
 		var testAudios = sampleAudios();
-		db.audioSave(testAudios)
-		.then((ids) => {
-			savedIds = ids;
+		db.audioSave(testAudios, (audio) => {
+			savedIds.push(audio.id);
+		}, 
+		() => {
 			done();
-		})
-		.catch(done);
+		});
 	});
 
 	it('audioQuery on id should return null', 
