@@ -2,6 +2,7 @@ language: generic
 
 before_script:
   - MONGOID=$(docker run -p 27017:27017 -d mongo:latest)
+  - npm install
 
 script:
   - npm test
