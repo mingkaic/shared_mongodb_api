@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "shared mongoose api for audio file persistence",
   "main": "index.js",
-  "directories": {},
+  "directories": {
+    "api": "api",
+    "models": "models",
+    "tests": "tests"
+  },
   "dependencies": {
     "gridfs-stream": "^1.1.1",
     "mongoose": "^4.11.12",
@@ -17,7 +21,7 @@
     "mongo-clean": "^1.2.2"
   },
   "scripts": {
-    "test": "mocha testDb.js"
+    "test": "mocha tests --recursive"
   },
   "repository": {
     "type": "git",
