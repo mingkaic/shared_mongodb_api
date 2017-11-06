@@ -91,9 +91,10 @@ exports.save = (audios, cb, end) => { // set audio stream and metadata
 					"title": aud.title,
 				});
 			});
-		})).then(end).catch((err) => {
-			console.log(err);
+		})).then(() => {
 			end();
+		}).catch((err) => {
+			end(err);
 		});
 	});
 };
