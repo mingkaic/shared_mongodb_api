@@ -41,10 +41,9 @@ describe('Audio Database (When Empty)', function() {
 		db.save(testAudios, (audio) => {
 			count++;
 			expect(testAudiosId.has(audio.id)).to.be.true;
-			expect(audio.id).to.not.be.equal(nulId);
 		}, 
 		() => {
-			expect(count).to.be.equal(testAudios.length - 1); // never count null audio
+			expect(count).to.be.equal(testAudios.length); // never count null audio
 			
 			clean(mongoURL, function (err, db) {
 				done();

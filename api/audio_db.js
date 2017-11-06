@@ -60,8 +60,17 @@ exports.save = (audios, cb, end) => { // set audio stream and metadata
 	waitForGfs(() => {
 		Promise.all(audios.map((aud) => {
 			if (null === aud || 
-				!(aud instanceof AudioSchema) ||
-				null == aud.audio) {
+				!(aud instanceof AudioSchema)) {
+				// bad format
+				return null;
+			}
+			if (null == aud.audio) {
+				// audio exists in database
+				cb({
+					"id": aud.id,
+					"source": aud.source,
+					"title": aud.title
+				});
 				return null;
 			}
 
@@ -70,9 +79,9 @@ exports.save = (audios, cb, end) => { // set audio stream and metadata
 			aud.audio.pipe(writeStream);
 			
 			var instance = new AudioModel({
-				'id': aud.id,
-				'source': aud.source,
-				'title': aud.title
+				"id": aud.id,
+				"source": aud.source,
+				"title": aud.title
 			});
 			
 			return new Promise((resolve, reject) => {
