@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const schemas = require('./schemas');
-require('./connect_mongo');
+
+exports.Connection = require('./connect_mongo');
 
 exports.AudioSchema = schemas.AudioSchema;
 exports.WordstampSchema = schemas.WordStampSchema;

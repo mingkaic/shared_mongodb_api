@@ -2,7 +2,6 @@ const chai = require('chai');
 const clean = require('mongo-clean');
 const mongoose = require('mongoose');
 const uuidv1 = require('uuid/v1');
-const stream = require('fake-stream');
 
 // connect mongoose to mongo then get service
 const schemas = require('../schemas');
@@ -92,5 +91,11 @@ describe('Captions Database (With An Entry)', function() {
 			done();
 		})
 		.catch(done);
+	});
+	
+	after(function(done) {
+		clean(mongoURL, function (err, db) {
+			done();
+		});
 	});
 });
